@@ -1,49 +1,49 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RegistroEmpleados.Models;
-using RegistroEmpleados.DAL;
 using RegistroEmpleados.Data;
+using RegistroEmpleados.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RegistroEmpleados.DAL.Repositories
 {
-    public class PuestoRepository
+    public class PuestoRepository : IPuestoRepository
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext _contexto;
 
-        public PuestoRepository(AppDbContext context)
+        public PuestoRepository(AppDbContext contexto)
         {
-            _context = context;
+            _contexto = contexto;
         }
 
-        public async Task<IEnumerable<Puesto>> GetAllAsync()
+        public async Task<IEnumerable<Puesto>> ObtenerTodosAsync()
         {
-            return await _context.Puestos.ToListAsync();
+            return await _contexto.Puestos.ToListAsync();
         }
 
-        public async Task<Puesto?> GetByIdAsync(int id)
+        public async Task<Puesto?> ObtenerPorIdAsync(int id)
         {
-            return await _context.Puestos.FindAsync(id);
+            return await _contexto.Puestos.FindAsync(id);
         }
 
-        public async Task AddAsync(Puesto puesto)
+        public async Task<Puesto> CrearAsync(Puesto puesto)
         {
-            _context.Puestos.Add(puesto);
-            await _context.SaveChangesAsync();
+            await _contexto.Puestos.AddAsync(puesto);
+            await _contexto.SaveChangesAsync();
+            return puesto; // <- ahora devuelve el objeto creado
         }
 
-        public async Task UpdateAsync(Puesto puesto)
+        public async Task<bool> ActualizarAsync(Puesto puesto)
         {
-            _context.Puestos.Update(puesto);
-            await _context.SaveChangesAsync();
+            _contexto.Puestos.Update(puesto);
+            return await _contexto.SaveChangesAsync() > 0;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<bool> EliminarAsync(int id)
         {
-            var puesto = await _context.Puestos.FindAsync(id);
-            if (puesto != null)
-            {
-                _context.Puestos.Remove(puesto);
-                await _context.SaveChangesAsync();
-            }
+            var puesto = await _contexto.Puestos.FindAsync(id);
+            if (puesto == null) return false;
+            _contexto.Puestos.Remove(puesto);
+            return await _contexto.SaveChangesAsync() > 0;
         }
     }
 }

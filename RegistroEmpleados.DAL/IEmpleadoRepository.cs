@@ -10,3 +10,4 @@ public interface IEmpleadoRepository
     Task<bool> ActualizarAsync(Empleado emp);
     Task<bool> EliminarAsync(int id);
 }
+

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RegistroEmpleados.DAL.Repositories;
-using RegistroEmpleados.BLL.Services;
+using RegistroEmpleados.Services;
 using RegistroEmpleados.Data;
 
 var builder = WebApplication.CreateBuilder(args);

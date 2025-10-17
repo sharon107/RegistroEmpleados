@@ -1,49 +1,49 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RegistroEmpleados.Models;
-using RegistroEmpleados.DAL;
 using RegistroEmpleados.Data;
+using RegistroEmpleados.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RegistroEmpleados.DAL.Repositories
 {
-    public class DepartamentoRepository
+    public class DepartamentoRepository : IDepartamentoRepository
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext _contexto;
 
-        public DepartamentoRepository(AppDbContext context)
+        public DepartamentoRepository(AppDbContext contexto)
         {
-            _context = context;
+            _contexto = contexto;
         }
 
-        public async Task<IEnumerable<Departamento>> GetAllAsync()
+        public async Task<IEnumerable<Departamento>> ObtenerTodosAsync()
         {
-            return await _context.Departamentos.ToListAsync();
+            return await _contexto.Departamentos.ToListAsync();
         }
 
-        public async Task<Departamento?> GetByIdAsync(int id)
+        public async Task<Departamento?> ObtenerPorIdAsync(int id)
         {
-            return await _context.Departamentos.FindAsync(id);
+            return await _contexto.Departamentos.FindAsync(id);
         }
 
-        public async Task AddAsync(Departamento departamento)
+        public async Task<Departamento> CrearAsync(Departamento departamento)
         {
-            _context.Departamentos.Add(departamento);
-            await _context.SaveChangesAsync();
+            await _contexto.Departamentos.AddAsync(departamento);
+            await _contexto.SaveChangesAsync();
+            return departamento; // <- ahora devuelve el objeto creado
         }
 
-        public async Task UpdateAsync(Departamento departamento)
+        public async Task<bool> ActualizarAsync(Departamento departamento)
         {
-            _context.Departamentos.Update(departamento);
-            await _context.SaveChangesAsync();
+            _contexto.Departamentos.Update(departamento);
+            return await _contexto.SaveChangesAsync() > 0;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<bool> EliminarAsync(int id)
         {
-            var departamento = await _context.Departamentos.FindAsync(id);
-            if (departamento != null)
-            {
-                _context.Departamentos.Remove(departamento);
-                await _context.SaveChangesAsync();
-            }
+            var departamento = await _contexto.Departamentos.FindAsync(id);
+            if (departamento == null) return false;
+            _contexto.Departamentos.Remove(departamento);
+            return await _contexto.SaveChangesAsync() > 0;
         }
     }
 }
