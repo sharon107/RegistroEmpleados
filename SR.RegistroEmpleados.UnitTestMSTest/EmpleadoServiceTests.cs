@@ -1,11 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RegistroEmpleados.Models;
-using RegistroEmpleados.DAL;
-using Moq;
+﻿using Moq;
 using RegistroEmpleados.Data;
+using RegistroEmpleados.Models;
 using RegistroEmpleados.Services;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace SR.RegistroEmpleados.UnitTestMSTest
 {
@@ -25,8 +21,8 @@ namespace SR.RegistroEmpleados.UnitTestMSTest
         [TestMethod]
         public async Task CrearEmpleado_DeberiaRetornarEmpleadoCreado()
         {
-            var emp = new Empleado { Nombre = "Ana", Apellido = "López", Correo = "ana@test.com", Id_Puesto = 1, Id_Depto = 1 };
-            _mockRepo.Setup(r => r.CrearAsync(emp)).ReturnsAsync(emp);
+           var emp = new Empleado { Nombre = "Ana", Apellido = "López", Correo = "ana@test.com", Id_Puesto = 1, Id_Depto = 1 };
+           _mockRepo.Setup(r => r.CrearAsync(emp)).ReturnsAsync(emp);
 
             var resultado = await _service.CrearAsync(emp);
 
@@ -47,7 +43,8 @@ namespace SR.RegistroEmpleados.UnitTestMSTest
         [TestMethod]
         public async Task ActualizarEmpleado_DeberiaRetornarTrue()
         {
-            var emp = new Empleado { Id_Emp = 1, Nombre = "Pedro", Apellido = "Rivas", Correo = "pedro@test.com", Id_Puesto = 1, Id_Depto = 1 };
+            var emp = new Empleado { Id_Emp = 1, Nombre = "Pedro", Apellido = "Rivas", Correo = "pedro@test.com",
+                Id_Puesto = 1, Id_Depto = 1 };
             _mockRepo.Setup(r => r.ActualizarAsync(emp)).ReturnsAsync(true);
 
             var resultado = await _service.ActualizarAsync(emp);
